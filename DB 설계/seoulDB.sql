@@ -80,13 +80,16 @@ CREATE TABLE IF NOT EXISTS user (
     CONSTRAINT fk_lno FOREIGN KEY (lno) REFERENCES location (lno) ON DELETE CASCADE
 );
 
+-- 유저 test data
+INSERT INTO user(id, pwd, name, nickName, sex, birth, lno) 
+VALUES ('hrnoh24', 'passwd', '노형래', '곰', '남', now(), 1);
+
 -- 모임
 CREATE TABLE IF NOT EXISTS club (
 	cno INT NOT NULL AUTO_INCREMENT,
     name VARCHAR(45) NOT NULL,
     discription TEXT,
     introduce TINYTEXT,
-    area VARCHAR(45) NOT NULL,
     picturePath VARCHAR(45),
     maxPeople INT NOT NULL,
     isprivate TINYINT NOT NULL DEFAULT 0,
@@ -98,6 +101,9 @@ CREATE TABLE IF NOT EXISTS club (
     CONSTRAINT fk_concern FOREIGN KEY (concern) REFERENCES concern (cno) ON DELETE CASCADE
 );
 
+INSERT INTO club (name, maxPeople, lno, concern) 
+VALUES ('앱공모전', 5, 1, 5);
+
 -- 모임에 참여를 나타냄
 CREATE TABLE IF NOT EXISTS belongs (
 	uno INT NOT NULL,
@@ -107,6 +113,10 @@ CREATE TABLE IF NOT EXISTS belongs (
     CONSTRAINT fk_cno_belongs FOREIGN KEY (cno) REFERENCES club (cno) ON DELETE CASCADE
 );
 
+-- 모임 참여 test data
+INSERT INTO belongs (uno, cno, position)
+VALUES (1, 1, '모임장');
+
 -- 유저의 관심사
 CREATE TABLE IF NOT EXISTS includes (
 	uno INT NOT NULL,
@@ -115,6 +125,11 @@ CREATE TABLE IF NOT EXISTS includes (
     CONSTRAINT fk_cno_includes FOREIGN KEY (cno) REFERENCES concern (cno) ON DELETE CASCADE
 );
 
+-- 유저 관심사 test data
+INSERT INTO includes (uno, cno) VALUES (1, 1);
+INSERT INTO includes (uno, cno) VALUES (1, 5);
+INSERT INTO includes (uno, cno) VALUES (1, 6);
+
 -- 모임 게시판
 CREATE TABLE IF NOT EXISTS board (
 	bno INT NOT NULL AUTO_INCREMENT,
@@ -122,9 +137,12 @@ CREATE TABLE IF NOT EXISTS board (
     title VARCHAR(45) NOT NULL,
     content TEXT NOT NULL,
     writer VARCHAR(45) NOT NULL,
-    regdate TIMESTAMP NOT NULL,
-    moddate TIMESTAMP NOT NULL,
+    regdate TIMESTAMP NOT NULL DEFAULT now(),
+    moddate TIMESTAMP NOT NULL DEFAULT now(),
     cno INT NOT NULL,
     PRIMARY KEY(bno),
     CONSTRAINT fk_cno_board FOREIGN KEY (cno) REFERENCES club (cno) ON DELETE CASCADE
 );
+
+-- 모임 게시판 test data
+INSERT INTO board (title, content, writer, cno) VALUES ('가입인사입니다', '안녕하세요 ㅇㅇㅇ입니다.', 'hrnoh24', 1);
