@@ -1,6 +1,8 @@
 package com.kpu.seoulclub.persistence;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -13,38 +15,37 @@ import com.kpu.seoulclub.domain.ClubVO;
 public class ClubDAOImpl implements ClubDAO {
 
 	@Inject
-	SqlSession session;
+	private SqlSession session;
 	
-	private static String namespace = "com.kpu.seoulclub.mapper.ClubMapper";
+	private static final String namespace = "com.kpu.seoulclub.mapper.ClubMapper";
 	
 	@Override
 	public void create(ClubVO vo) throws Exception {
-		// TODO Auto-generated method stub
 		session.insert(namespace + ".create", vo);
 	}
-
+	
 	@Override
-	public void update(ClubVO vo) throws Exception {
-		// TODO Auto-generated method stub
-		session.update(namespace + ".update", vo);
+	public int nameCount(String name) throws Exception {
+		return session.selectOne(name + ".nameCount");
 	}
-
-	@Override
-	public ClubVO read(int cno) throws Exception {
-		// TODO Auto-generated method stub
-		return session.selectOne(namespace + ".read", cno);
-	}
-
-	@Override
-	public void delete(int cno) throws Exception {
-		// TODO Auto-generated method stub
-		session.delete(namespace + ".delete", cno);
-	}
-
+	
 	@Override
 	public List<ClubVO> listAll() throws Exception {
 		// TODO Auto-generated method stub
 		return session.selectList(namespace + ".listAll");
 	}
 
+	@Override
+	public List<ClubVO> listByCL(String location, String concern) throws Exception {
+		Map<String, String> params = new HashMap<>();
+		params.put("location", location);
+		params.put("concern", concern);
+		
+		return session.selectList(namespace + ".listByCL", params);
+	}
+	
+	@Override
+	public List<ClubVO> listByUno(int uno) throws Exception {
+		return session.selectList(namespace + ".listByUno", uno);
+	}
 }

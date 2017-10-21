@@ -5,8 +5,8 @@
 <mapper namespace="com.kpu.seoulclub.mapper.UserMapper">
 	
 	<insert id="create">
-		insert into user (id, pwd, name, nickName, sex, introduce, birth, picturePath, lno)
-		values (#{id}, #{pwd}, #{name}, #{nickName}, #{sex}, #{introduce}, #{birth}, #{picturePath}, #{lno})
+		INSERT INTO user(id, pwd, name, nickName, sex, introduce, birth, storedFolder, storedFile, originalFileName, uploadDate, fileSize, location, concern) 
+		VALUES (#{id}, #{pwd}, #{name}, #{nickName}, #{sex}, #{introduce}, #{birth}, #{storedFolder}, #{storedFile}, #{originalFileName}, now(), #{fileSize}, #{location}, #{concern});
 	</insert>
 
 	<select id="read" resultType="UserVO">
@@ -20,6 +20,11 @@
 		where uno = #{uno}
 	</update>
 	
+	<update id="updatePhoto">
+		update user set storedFolder = #{storedFolder}, storedFile = #{storedFile}
+		where uno = #{uno}
+	</update>
+	
 	<delete id="delete">
 		delete from user where uno = #{uno}
 	</delete>
@@ -28,6 +33,18 @@
 	<![CDATA[
 		select uno, id, pwd, name, nickName, sex, introduce, birth, picturePath, lno
 		from user
+	]]>
+	</select>
+	
+	<select id="listConcern" resultType="ConcernVO">
+	<![CDATA[
+		select * from concern
+	]]>
+	</select>
+	
+	<select id="idCount" resultType="int">
+	<![CDATA[
+		SELECT COUNT(uno) from user where id like #{id};
 	]]>
 	</select>
 	

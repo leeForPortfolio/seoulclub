@@ -1,16 +1,24 @@
 package com.kpu.seoulclub.domain;
 
+import java.util.Date;
+
 public class ClubVO {
 	private int cno;
 	private String name;
-	private String description;
 	private String introduce;
-	private String picturePath;
+	private String description;
+	private int currentPeople;
 	private int maxPeople;
-	private int isprivate;
 	private int isadmission;
-	private int lno;
-	private int concern;
+	private int isprivate;
+	private String storedFolder;
+	private String storedFile;
+	private String originalFileName;
+	private Date uploadDate;
+	private long fileSize;
+	private String location;
+	private String concern;
+	private String imgurl;
 	public int getCno() {
 		return cno;
 	}
@@ -23,23 +31,23 @@ public class ClubVO {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getDescription() {
-		return description;
-	}
-	public void setDescription(String description) {
-		this.description = description;
-	}
 	public String getIntroduce() {
 		return introduce;
 	}
 	public void setIntroduce(String introduce) {
 		this.introduce = introduce;
 	}
-	public String getPicturePath() {
-		return picturePath;
+	public String getDescription() {
+		return description;
 	}
-	public void setPicturePath(String picturePath) {
-		this.picturePath = picturePath;
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	public int getCurrentPeople() {
+		return currentPeople;
+	}
+	public void setCurrentPeople(int currentPeople) {
+		this.currentPeople = currentPeople;
 	}
 	public int getMaxPeople() {
 		return maxPeople;
@@ -47,35 +55,74 @@ public class ClubVO {
 	public void setMaxPeople(int maxPeople) {
 		this.maxPeople = maxPeople;
 	}
-	public int getIsprivate() {
-		return isprivate;
-	}
-	public void setIsprivate(int isprivate) {
-		this.isprivate = isprivate;
-	}
 	public int getIsadmission() {
 		return isadmission;
 	}
 	public void setIsadmission(int isadmission) {
 		this.isadmission = isadmission;
 	}
-	public int getLno() {
-		return lno;
+	public int getIsprivate() {
+		return isprivate;
 	}
-	public void setLno(int lno) {
-		this.lno = lno;
+	public void setIsprivate(int isprivate) {
+		this.isprivate = isprivate;
 	}
-	public int getConcern() {
+	public String getStoredFolder() {
+		return storedFolder;
+	}
+	public void setStoredFolder(String storedFolder) {
+		this.storedFolder = storedFolder;
+	}
+	public String getStoredFile() {
+		return storedFile;
+	}
+	public void setStoredFile(String storedFile) {
+		this.storedFile = storedFile;
+	}
+	public String getOriginalFileName() {
+		return originalFileName;
+	}
+	public void setOriginalFileName(String originalFileName) {
+		this.originalFileName = originalFileName;
+	}
+	public Date getUploadDate() {
+		return uploadDate;
+	}
+	public void setUploadDate(Date uploadDate) {
+		this.uploadDate = uploadDate;
+	}
+	public String getLocation() {
+		return location;
+	}
+	public void setLocation(String location) {
+		this.location = location;
+	}
+	public String getConcern() {
 		return concern;
 	}
-	public void setConcern(int concern) {
+	public void setConcern(String concern) {
 		this.concern = concern;
+	}
+	
+	public long getFileSize() {
+		return fileSize;
+	}
+	public void setFileSize(long fileSize) {
+		this.fileSize = fileSize;
+	}
+	public String getImgurl() {
+		return imgurl;
+	}
+	public void setImgurl(String imgurl) {
+		this.imgurl = imgurl;
 	}
 	@Override
 	public String toString() {
-		return "ClubVO [cno=" + cno + ", name=" + name + ", description=" + description + ", introduce=" + introduce
-				+ ", picturePath=" + picturePath + ", maxPeople=" + maxPeople + ", isprivate=" + isprivate
-				+ ", isadmission=" + isadmission + ", lno=" + lno + ", concern=" + concern + "]";
+		return "ClubVO [cno=" + cno + ", name=" + name + ", introduce=" + introduce + ", description=" + description
+				+ ", currentPeople=" + currentPeople + ", maxPeople=" + maxPeople + ", isadmission=" + isadmission
+				+ ", isprivate=" + isprivate + ", storedFolder=" + storedFolder + ", storedFile=" + storedFile
+				+ ", originalFileName=" + originalFileName + ", uploadDate=" + uploadDate + ", fileSize=" + fileSize
+				+ ", location=" + location + ", concern=" + concern + ", imgurl=" + imgurl + "]";
 	}
 	
 	

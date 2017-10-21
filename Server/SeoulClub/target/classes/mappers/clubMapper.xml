@@ -3,41 +3,95 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kpu.seoulclub.mapper.ClubMapper">
-
 	<insert id="create">
-		insert into club (name, introduce, description, picturePath, maxPeople, isprivate, isadmission, lno, concern)
-		values (#{name}, #{introduce}, #{description}, #{picturePath}, #{maxPeople}, #{isprivate}, #{isadmission}, #{lno}, #{concern})
+		INSERT INTO club(
+			name, 
+		    introduce, 
+		    description, 
+		    maxpeople, 
+		    isadmission, 
+		    isprivate, 
+		    storedFolder, 
+		    storedFile, 
+		    originalFileName, 
+		    fileSize, 
+		    location, 
+		    concern, 
+		    uno)
+		VALUES (
+		    #{name},
+		    #{introduce},
+		    #{description},
+		    #{maxpeople},
+		    #{isadmission},
+		    #{isprivate},
+		    #{storedFolder},
+		    #{storedFile},
+		    #{originalFileName},
+		    #{fileSize},
+		    #{location},
+		    #{concern},
+		    #{uno}
+		    );
 	</insert>
-
-	<select id="read" resultType="ClubVO">
-		select cno, name, description, introduce, picturePath, maxPeople, isprivate, isadmission, lno, concern
-		from club
-		where cno = #{cno}
+	
+	<select id="nameCount" resultType="int">
+		SELECT COUNT(cno)
+		FROM club
+		WHERE name like #{name}
 	</select>
 	
-	<update id="update">
-		update club set 
-		name=#{name}, 
-		description=#{description}, 
-		introduce=#{introduce}, 
-		picturePath=#{picturePath}, 
-		maxPeople=#{maxPeople},
-		isprivate=#{isprivate},
-		isadmission=#{isadmission}, 
-		lno=#{lno},
-		concern=#{concern}
-		where cno = #{cno}
-	</update>
-	
-	<delete id="delete">
-		delete from club where cno = #{cno}
-	</delete>
-	
 	<select id="listAll" resultType="ClubVO">
-	<![CDATA[
-		select cno, name, description, introduce, picturePath, maxPeople, isprivate, isadmission, lno, concern
-		from club
-	]]>
+		SELECT 
+			club.cno, 
+			club.name, 
+		    club.introduce, 
+		    club.currentpeople, 
+		    club.maxpeople, 
+		    club.location, 
+		    club.concern,
+		    club.storedFolder,
+		    club.storedFile,
+		    CONCAT("/photo/", club.storedFolder, "/", club.storedFile) as imgurl
+		FROM club
+		JOIN timeline ON club.cno = timeline.cno
+		ORDER BY timeline.regDate DESC
+		LIMIT 30
+	</select>
+	
+	<select id="listByCL" resultType="ClubVO">
+		SELECT
+			cno,
+		    name,
+		    introduce,
+		    currentpeople,
+		    maxpeople,
+		    location,
+		    concern,
+		    storedFolder,
+		    storedFile,
+		    CONCAT("/photo/", club.storedFolder, "/", club.storedFile) as imgurl
+		FROM club
+		WHERE location like CONCAT("%",#{location},"%") OR concern like CONCAT("%",#{concern}, "%")
+		ORDER BY name ASC
+		LIMIT 30;
+	</select>
+	
+	<select id="listByUno" resultType="ClubVO">
+		SELECT
+			cno,
+		    name,
+		    introduce,
+		    currentpeople,
+		    maxpeople,
+		    location,
+		    concern,
+		    storedFolder,
+		    storedFile,
+		    CONCAT("/photo/", club.storedFolder, "/", club.storedFile) as imgurl
+		FROM club
+		WHERE uno = #{uno}
+		ORDER BY name ASC;
 	</select>
 	
 </mapper>

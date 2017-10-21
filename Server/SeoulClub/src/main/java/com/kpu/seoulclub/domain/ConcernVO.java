@@ -2,22 +2,22 @@ package com.kpu.seoulclub.domain;
 
 public class ConcernVO {
 	private int cno;
-	private String cname;
+	private String name;
 	public int getCno() {
 		return cno;
 	}
 	public void setCno(int cno) {
 		this.cno = cno;
 	}
-	public String getCname() {
-		return cname;
+	public String getname() {
+		return name;
 	}
-	public void setCname(String cname) {
-		this.cname = cname;
+	public void setname(String name) {
+		this.name = name;
 	}
 	@Override
 	public String toString() {
-		return "ConcernVO [cno=" + cno + ", cname=" + cname + "]";
+		return "ConcernVO [cno=" + cno + ", name=" + name + "]";
 	}
 	
 	

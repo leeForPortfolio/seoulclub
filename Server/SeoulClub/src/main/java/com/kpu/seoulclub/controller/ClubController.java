@@ -4,20 +4,21 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.kpu.seoulclub.domain.ClubVO;
+import com.kpu.seoulclub.domain.UserVO;
 import com.kpu.seoulclub.service.ClubService;
 
 @RestController
@@ -28,43 +29,71 @@ public class ClubController {
 	@Inject
 	private ClubService service;
 	
-	@PostMapping("/")
-	public ResponseEntity<String> regist(@RequestBody ClubVO vo) {
+	/*
+	 * 모임 등록
+	 * */
+	@PostMapping(path="/regist", produces="text/plain; charset=UTF-8")
+	public ResponseEntity<String> regist(@RequestBody ClubVO vo, MultipartFile file) {
 		ResponseEntity<String> entity = null;
+
+		logger.info("request received");
+		logger.info(vo.getName()+" "+vo.getIntroduce());
+		if(file != null) {
+			logger.info("originalName: " + file.getOriginalFilename());
+			logger.info("size: " + file.getSize());
+			logger.info("contentType: " + file.getContentType());
+		}
 		
 		try {
-			service.regist(vo);
-			entity = new ResponseEntity<String>("success", HttpStatus.OK);
+			if(service.regist(vo, file)) {
+				logger.info(vo.getName() + " 모임이 등록되었습니다.");
+				entity = new ResponseEntity<String> ("success", HttpStatus.CREATED);
+			}
+			else {
+				logger.info("모임등록-모임명 중복!");		
+				entity = new ResponseEntity<String> ("fail", HttpStatus.BAD_REQUEST);
+			}
 		} catch (Exception e) {
-			// TODO: handle exception
 			e.printStackTrace();
-			entity = new ResponseEntity<String>("fail", HttpStatus.BAD_REQUEST);
+			entity = new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
 		return entity;
 	}
 	
-	@GetMapping("/{cno}")
-	public ResponseEntity<ClubVO> read(@PathVariable int cno) {
-		ClubVO vo = null;
-		ResponseEntity<ClubVO> entity = null;
+	/*
+	 * 모임 중복 체크
+	 * */
+	@PostMapping(path="/namecheck", produces="application/json; charset=UTF-8")
+	public JSONObject idcheck(@RequestBody ClubVO vo) {
+		boolean result;
+		String name = vo.getName();
+		JSONObject obj = new JSONObject();
 		
 		try {
-			vo = service.read(cno);
-			entity = new ResponseEntity<ClubVO>(vo, HttpStatus.OK);
+			if(name != null) {
+				result = service.dupCheck(name);
+				obj.put("result", result);
+			}
+			else {
+				obj.put("result", "잘못된 요청입니다");
+			}
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
-			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			obj.put("result", "서버 에러");
 		}
 		
-		return entity;
+		return obj;
 	}
 	
+	/*
+	 * 전체 모임
+	 * */
 	@GetMapping("/all")
 	public ResponseEntity<List<ClubVO>> listAll() {
-		List<ClubVO> list = null;
 		ResponseEntity<List<ClubVO>> entity = null;
+		List<ClubVO> list = null;
 		
 		try {
 			list = service.listAll();
@@ -72,42 +101,50 @@ public class ClubController {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
-			entity = new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+			entity = new ResponseEntity<List<ClubVO>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
 		return entity;
 	}
 	
-	@PutMapping("/{cno}")
-	public ResponseEntity<String> modify(@PathVariable int cno, @RequestBody ClubVO vo) {
-		ResponseEntity<String> entity = null;
-		vo.setCno(cno);
+	/*
+	 * 지역별, 관심사별 목록
+	 * */
+	@GetMapping("/cl")
+	public ResponseEntity<List<ClubVO>> listByCL(String location, String concern) {
+		ResponseEntity<List<ClubVO>> entity = null;
+		List<ClubVO> list = null;
 		
 		try {
-			service.modify(vo);
-			entity = new ResponseEntity<String>("success", HttpStatus.OK);
+			list = service.listByCL(location, concern);
+			entity = new ResponseEntity<List<ClubVO>>(list, HttpStatus.OK);
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
-			entity = new ResponseEntity<String>("fail", HttpStatus.BAD_REQUEST);
+			entity = new ResponseEntity<List<ClubVO>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
 		return entity;
 	}
 	
-	@DeleteMapping("/{cno}")
-	public ResponseEntity<String> remove(@PathVariable int cno) {
-		ResponseEntity<String> entity = null;
+	/*
+	 * 내 모임
+	 * */
+	@GetMapping("/list/{uno}")
+	public ResponseEntity<List<ClubVO>> myClubs(@PathVariable("uno") int uno) {
+		ResponseEntity<List<ClubVO>> entity = null;
+		List<ClubVO> list = null;
 		
 		try {
-			service.remove(cno);
-			entity = new ResponseEntity<String>("success", HttpStatus.OK);
+			list = service.myClubs(uno);
+			entity = new ResponseEntity<List<ClubVO>>(list, HttpStatus.OK);
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
-			entity = new ResponseEntity<String>("fail", HttpStatus.BAD_REQUEST);
+			entity = new ResponseEntity<List<ClubVO>>(HttpStatus.BAD_REQUEST);
 		}
 		
 		return entity;
 	}
+	
 }
