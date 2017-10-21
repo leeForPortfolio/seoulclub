@@ -36,7 +36,7 @@ public class ClubController {
 	public ResponseEntity<String> regist(@RequestBody ClubVO vo, MultipartFile file) {
 		ResponseEntity<String> entity = null;
 
-		logger.info("request receiv");
+		logger.info("request received");
 		logger.info(vo.getName()+" "+vo.getIntroduce());
 		if(file != null) {
 			logger.info("originalName: " + file.getOriginalFilename());
