@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import okhttp3.MediaType;
@@ -57,12 +58,11 @@ public class JoinActivity extends AppCompatActivity {
     EditText etId, etPsw, etNick, etIntroduce, etBirth, etName;
     RadioGroup rgSelectSex;
     Spinner regionSpinner, concernSpinner;
-    int lno;
     String imagePath;
     Uri imageUri;
     int year, month, day, hour, minute;
     String msg;
-    String SelectedLocation;
+    ArrayAdapter<String> regionAdapter;
     List<Concern> concerns;
 
     @Override
@@ -70,23 +70,6 @@ public class JoinActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join);
 
-        Button btntest = (Button)findViewById(R.id.test);
-        btntest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                RetrofitManager.getInstance().getUrl().listConcern1().enqueue(new Callback<String>() {
-                    @Override
-                    public void onResponse(Call<String> call, Response<String> response) {
-                        Toast.makeText(getApplicationContext(),"!!!",Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onFailure(Call<String> call, Throwable t) {
-
-                    }
-                });
-            }
-        });
 
 
 
@@ -119,6 +102,9 @@ public class JoinActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<IdCheckResult> call, Response<IdCheckResult> response) {
                         IdCheckResult idCheckResult = response.body();
+
+
+
                         if (idCheckResult.isResult()) {
                             Toast.makeText(getApplicationContext(), "사용 가능한 아이디 입니다.", Toast.LENGTH_SHORT).show();
 
@@ -152,49 +138,20 @@ public class JoinActivity extends AppCompatActivity {
             }
         });
 
-        final List<Region> locations = new ArrayList<>();
-        locations.add(new Region(1, "강남구"));
-        locations.add(new Region(2, "강동구"));
-        locations.add(new Region(3, "강북구"));
-        locations.add(new Region(4, "강서구"));
-        locations.add(new Region(5, "관악구"));
-        locations.add(new Region(6, "광진구"));
-        locations.add(new Region(7, "구로구"));
-        locations.add(new Region(8, "금천구"));
-        locations.add(new Region(9, "노원구"));
-        locations.add(new Region(10, "도봉구"));
-        locations.add(new Region(11, "동대문구"));
-        locations.add(new Region(12, "동작구"));
-        locations.add(new Region(13, "마포구"));
-        locations.add(new Region(14, "서대문구"));
-        locations.add(new Region(15, "서초구"));
-        locations.add(new Region(16, "성동구"));
-        locations.add(new Region(17, "성북구"));
-        locations.add(new Region(18, "송파구"));
-        locations.add(new Region(19, "양천구"));
-        locations.add(new Region(20, "영등포구"));
-        locations.add(new Region(21, "용산구"));
-        locations.add(new Region(22, "은평구"));
-        locations.add(new Region(23, "종로구"));
-        locations.add(new Region(24, "중구"));
-        locations.add(new Region(25, "중랑구"));
-
+        final String[] locations = getResources().getStringArray(R.array.location);
         ArrayAdapter<String> regionAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item) {
             @Nullable
             @Override
             public String getItem(int position) {
-                return locations.get(position).getRegion();
+                return locations[position];
             }
 
             @Override
             public int getPosition(@Nullable String item) {
                 if (item != null) {
-                    for (int i = 0; i < locations.size(); i++) {
-                        if (item.equals(locations.get(i).getRegion())) {
-                            SelectedLocation = locations.get(i).getRegion();
-                            lno = i;
+                    for (int i = 0; i < locations.length; i++) {
+                        if (item.equals(locations[i]))
                             return i;
-                        }
                     }
                 }
                 return -1;
@@ -207,7 +164,7 @@ public class JoinActivity extends AppCompatActivity {
 
             @Override
             public int getCount() {
-                return locations.size();
+                return locations.length;
             }
         };
         regionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -265,19 +222,17 @@ public class JoinActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-//                User user =new User(etId.getText().toString(),etPsw.getText().toString(),etNick.getText().toString(),
-//                        lno,rgSelectSex.getCheckedRadioButtonId()+"",etIntroduce.getText().toString());
                 RequestBody id = RequestBody.create(MultipartBody.FORM, etId.getText().toString());
                 RequestBody pwd = RequestBody.create(MultipartBody.FORM, etPsw.getText().toString());
                 RequestBody nickName = RequestBody.create(MultipartBody.FORM, etNick.getText().toString());
                 RequestBody name = RequestBody.create(MultipartBody.FORM, etName.getText().toString());
                 RequestBody birth = RequestBody.create(MultipartBody.FORM, msg);
-                RequestBody loctaion = RequestBody.create(MultipartBody.FORM, "강동구"); //(JoinActivity.this.SelectedLocation+""));
-                RequestBody concern = RequestBody.create(MultipartBody.FORM, ""); //+ (JoinActivity.this.SelectedLocation+));
+                RequestBody loctaion = RequestBody.create(MultipartBody.FORM, (String)(regionSpinner.getSelectedItem())); //(JoinActivity.this.SelectedLocation+""));
+                RequestBody concern = RequestBody.create(MultipartBody.FORM, (String)(concernSpinner.getSelectedItem())); //+ (JoinActivity.this.SelectedLocation+));
                 RequestBody sex = RequestBody.create(MultipartBody.FORM, (rgSelectSex.getCheckedRadioButtonId() == R.id.radioMan) ? "1" : "2");
                 RequestBody introduce = RequestBody.create(MultipartBody.FORM, etIntroduce.getText().toString());
 
-                Log.e("list", "id : " + etId.getText().toString() + " location : " + SelectedLocation);
+//                Log.e("list", "id : " + etId.getText().toString() + " location : " + SelectedLocation);
 
 
                 File file2 = new File(imagePath);
@@ -288,21 +243,23 @@ public class JoinActivity extends AppCompatActivity {
                 MultipartBody.Part file = MultipartBody.Part.createFormData("file", file2.getName(), requestFile);
 
 
-                RetrofitManager.getInstance().getUrl().join(id, pwd, name, nickName, birth, loctaion, concern, sex, introduce, file).enqueue(new Callback<Map<String, String>>() {
+                RetrofitManager.getInstance().getUrl().join(id, pwd, name, nickName, birth, loctaion, concern, sex, introduce, file).enqueue(new Callback<Map<String,String>>() {
                     @Override
-                    public void onResponse(Call<Map<String, String>> call, Response<Map<String, String>> response) {
+                    public void onResponse(Call<Map<String,String>> call, Response<Map<String,String>> response) {
+
 
                         if (response.isSuccessful()) {
                             Toast.makeText(getApplicationContext(), "회원 가입에 성공 했습니다.", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(JoinActivity.this, MainActivity.class);
+                            Intent intent = new Intent(JoinActivity.this,MainActivity.class);
                             startActivity(intent);
                         } else {
                             Toast.makeText(getApplicationContext(), "회원 가입에 실패 했습니다.", Toast.LENGTH_SHORT).show();
+                            Log.i(""+response.code(),""+response.body());
                         }
                     }
 
                     @Override
-                    public void onFailure(Call<Map<String, String>> call, Throwable t) {
+                    public void onFailure(Call<Map<String,String>> call, Throwable t) {
                         Log.e("failure", "", t);
                     }
                 });
@@ -321,7 +278,7 @@ public class JoinActivity extends AppCompatActivity {
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
             // TODO Auto-generated method stub
-            msg = String.format("%d-%d-%d", year, monthOfYear + 1, dayOfMonth);
+            msg = String.format(Locale.KOREA,"%d-%d-%d", year, monthOfYear + 1, dayOfMonth);
             etBirth.setText(msg);
         }
     };
@@ -346,12 +303,14 @@ public class JoinActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 imageUri = data.getData();
                 Cursor c = getContentResolver().query(imageUri, new String[]{MediaStore.Images.Media.DATA}, null, null, null);
+                if(c == null) return;
                 if (c.moveToNext()) {
                     String path = c.getString(c.getColumnIndex(MediaStore.Images.Media.DATA));
                     imagePath = path;
                     Log.i("Single", "path : " + path);
                     imageView.setImageBitmap(BitmapFactory.decodeFile(path));
                 }
+                c.close();
             }
         }
     }

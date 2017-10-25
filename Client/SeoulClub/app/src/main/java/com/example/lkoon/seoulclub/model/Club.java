@@ -5,14 +5,17 @@ package com.example.lkoon.seoulclub.model;
  */
 
 public class Club {
-    private int cno = 0;
-    private String name = "";
-    private String introduce = "";
-    private int currPeople = 0;
-    private int lno = 0;
-    private String lnoName = "";
-    private int concern = 0;
-    private String concernName = "";
+    private int cno;
+    private String name;
+    private String introduce;
+    private String description;
+    private int currentPeople;
+    private int maxPeople;
+    private int isadmission;
+    private int isprivate;
+    private String location;
+    private String concern;
+    private String imgurl;
 
     public int getCno() {
         return cno;
@@ -38,43 +41,67 @@ public class Club {
         this.introduce = introduce;
     }
 
-    public int getCurrPeople() {
-        return currPeople;
+    public String getDescription() {
+        return description;
     }
 
-    public void setCurrPeople(int currPeople) {
-        this.currPeople = currPeople;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public int getLno() {
-        return lno;
+    public int getCurrentPeople() {
+        return currentPeople;
     }
 
-    public void setLno(int lno) {
-        this.lno = lno;
+    public void setCurrentPeople(int currentPeople) {
+        this.currentPeople = currentPeople;
     }
 
-    public String getLnoName() {
-        return lnoName;
+    public int getMaxPeople() {
+        return maxPeople;
     }
 
-    public void setLnoName(String lnoName) {
-        this.lnoName = lnoName;
+    public void setMaxPeople(int maxPeople) {
+        this.maxPeople = maxPeople;
     }
 
-    public int getConcern() {
+    public int getIsadmission() {
+        return isadmission;
+    }
+
+    public void setIsadmission(int isadmission) {
+        this.isadmission = isadmission;
+    }
+
+    public int getIsprivate() {
+        return isprivate;
+    }
+
+    public void setIsprivate(int isprivate) {
+        this.isprivate = isprivate;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getConcern() {
         return concern;
     }
 
-    public void setConcern(int concern) {
+    public void setConcern(String concern) {
         this.concern = concern;
     }
 
-    public String getConcernName() {
-        return concernName;
+    public String getImgurl() {
+        return imgurl;
     }
 
-    public void setConcernName(String concernName) {
-        this.concernName = concernName;
+    public void setImgurl(String imgurl) {
+        this.imgurl = imgurl;
     }
 }

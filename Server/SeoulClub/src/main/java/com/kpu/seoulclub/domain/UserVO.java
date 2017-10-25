@@ -1,5 +1,6 @@
 package com.kpu.seoulclub.domain;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -27,6 +28,24 @@ public class UserVO {
 	private String location;
 	private String concern;
 	private String imgurl;
+	
+	public UserVO() {}
+	
+	public UserVO(String id, String pwd, String name, String nickName, int sex, String introduce, String birth,
+			String location, String concern) throws Exception {
+		super();
+		this.id = id;
+		this.pwd = pwd;
+		this.name = name;
+		this.nickName = nickName;
+		this.sex = sex;
+		this.introduce = introduce;
+		setBirth(birth);
+		this.location = location;
+		this.concern = concern;
+	}
+
+
 	public int getUno() {
 		return uno;
 	}
@@ -74,6 +93,10 @@ public class UserVO {
 	}
 	public void setBirth(Date birth) {
 		this.birth = birth;
+	}
+	public void setBirth(String birth) throws Exception {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		this.birth = sdf.parse(birth);
 	}
 	public String getStoredFolder() {
 		return storedFolder;

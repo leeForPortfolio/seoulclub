@@ -1,6 +1,8 @@
 package com.kpu.seoulclub.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
@@ -51,9 +53,18 @@ public class UserController {
 		    "concern":"여행, 영화, 스터디"
 		}
 	 * */
-	@PostMapping(path="/join", produces="text/plain; charset=UTF-8")
-	public ResponseEntity<String> regist(@RequestBody UserVO vo, MultipartFile file) {
-		ResponseEntity<String> entity = null;
+	
+	@PostMapping(path="/join")
+	public ResponseEntity<JSONObject> regist( 
+			//@RequestParam UserVO vo,
+			@RequestParam("id") String id, @RequestParam("pwd")String pwd,@RequestParam("name")String name, @RequestParam("nickName")String nickName,@RequestParam("birth")String birth,
+            @RequestParam("location")String location,@RequestParam("concern")String concern, @RequestParam("sex")int sex, @RequestParam("introduce")String introduce,
+		MultipartFile file) throws Exception {
+		
+		UserVO vo = new UserVO(id, pwd, name, nickName, sex, introduce, birth, location, concern);
+		
+		ResponseEntity<JSONObject> entity = null;
+		JSONObject obj = new JSONObject();
 
 		logger.info("요청이 들어왔습니다.");
 		logger.info(vo.getId()+" "+vo.getIntroduce());
@@ -66,15 +77,18 @@ public class UserController {
 		try {
 			if(service.regist(vo, file)) {
 				logger.info(vo.getId() + "님 등록되었습니다.");
-				entity = new ResponseEntity<String> ("success", HttpStatus.CREATED);
+				obj.put("result", "success");
+				entity = new ResponseEntity<> (obj, HttpStatus.CREATED);
 			}
 			else {
 				logger.info("회원가입-아이디 중복!");		
-				entity = new ResponseEntity<String> ("fail", HttpStatus.BAD_REQUEST);
+				obj.put("result", "fail");
+				entity = new ResponseEntity<> (obj, HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			entity = new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+			obj.put("result", e.getMessage());
+			entity = new ResponseEntity<>(obj, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
 		return entity;

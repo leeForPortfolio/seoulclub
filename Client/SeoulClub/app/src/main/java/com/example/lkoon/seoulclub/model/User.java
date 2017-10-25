@@ -9,7 +9,7 @@ public class User {
     String name = "";
     String nickname ="";
     String sex ="";
-    long birth =0;
+    String birth =null;
     String pictutrePath ="";
     int lno = 0;
     String id ="";
@@ -61,11 +61,11 @@ public class User {
         this.sex = sex;
     }
 
-    public long getBirth() {
+    public String getBirth() {
         return birth;
     }
 
-    public void setBirth(long birth) {
+    public void setBirth(String  birth) {
         this.birth = birth;
     }
 
