@@ -19,6 +19,49 @@ public class ClubVO {
 	private String location;
 	private String concern;
 	private String imgurl;
+	private int uno;
+	
+	public int getUno() {
+		return uno;
+	}
+
+
+	public void setUno(int uno) {
+		this.uno = uno;
+	}
+
+
+	public ClubVO() {
+		
+	}
+	
+	
+	public ClubVO(int cno, String name, String introduce, int currentPeople, int maxPeople, String storedFolder,
+			String storedFile, String location, String concern, String imgurl,int uno) {
+		super();
+		this.cno = cno;
+		this.name = name;
+		this.introduce = introduce;
+		this.currentPeople = currentPeople;
+		this.maxPeople = maxPeople;
+		this.storedFolder = storedFolder;
+		this.storedFile = storedFile;
+		this.location = location;
+		this.concern = concern;
+		this.imgurl = imgurl;
+		this.uno = uno;
+	}
+	public ClubVO(String name, String introduce, String description, int maxPeople, String location,
+			String concern,int uno) {
+		super();
+		this.name = name;
+		this.introduce = introduce;
+		this.description = description;
+		this.maxPeople = maxPeople;
+		this.location = location;
+		this.concern = concern;
+		this.uno = uno;
+	}
 	public int getCno() {
 		return cno;
 	}

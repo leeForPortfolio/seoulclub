@@ -4,15 +4,33 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kpu.seoulclub.mapper.UserMapper">
 	
-	<insert id="create">
-		INSERT INTO user(id, pwd, name, nickName, sex, introduce, birth, storedFolder, storedFile, originalFileName, uploadDate, fileSize, location, concern) 
-		VALUES (#{id}, #{pwd}, #{name}, #{nickName}, #{sex}, #{introduce}, #{birth}, #{storedFolder}, #{storedFile}, #{originalFileName}, now(), #{fileSize}, #{location}, #{concern});
+	<insert id="create" keyProperty="uno" useGeneratedKeys="true">
+		INSERT INTO user(id, pwd, name, nickName, sex, introduce, birth, storedFolder, storedFile, originalFileName, uploadDate, fileSize, concern) 
+		VALUES (#{id}, #{pwd}, #{name}, #{nickName}, #{sex}, #{introduce}, #{birth}, #{storedFolder}, #{storedFile}, #{originalFileName}, now(), #{fileSize}, #{concern});
 	</insert>
+	
+	<insert id="addLocation">
+		insert into locationlist(`lno`,`uno`) 
+		select `lno`, #{uno} from `location` where `name` in 
+		<foreach collection="locations" item="item" open="(" close=")" separator=",">
+			#{item}
+		</foreach> 
+	</insert>
+	
 
 	<select id="read" resultType="UserVO">
-		select uno, id, pwd, name, nickName, sex, introduce, birth, picturePath, lno
+		select uno, id, pwd, name, nickName, sex, introduce, birth, storedFolder, storedFile
 		from user
-		where uno = #{uno}
+		<where>
+			<choose>
+				<when test="uno != null &amp;&amp; uno &gt; 0">
+					uno = #{uno}
+				</when>
+				<when test="id != null &amp;&amp; pwd != null">
+					id = #{id} and pwd = #{pwd}
+				</when>
+			</choose>
+		</where>
 	</select>
 	
 	<update id="update">
@@ -35,6 +53,25 @@
 		from user
 	]]>
 	</select>
+	
+	
+	
+	<select id="clubListAll" resultType="UserVO">
+	<![CDATA[
+		select joinclub
+		from user
+	]]>
+	</select>
+	
+	
+	<update id="joinclubnumber">
+	update user set joinclubnumber = joinclubnumber +1 where id = #{id}
+	</update>
+	
+	
+	
+	
+	
 	
 	<select id="listConcern" resultType="ConcernVO">
 	<![CDATA[

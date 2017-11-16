@@ -31,6 +31,8 @@ public class IntroduceViewHolder extends RecyclerView.ViewHolder {
                 }
             }
         });
+
+
         tvClubName= (TextView)itemView.findViewById(R.id.tvClubName);
         tvShortIntroduce = (TextView)itemView.findViewById(R.id.tvShortIntroduce);
         tvCurrenPeopleNumber = (TextView)itemView.findViewById(R.id.tvCurrenPeopleNumber);

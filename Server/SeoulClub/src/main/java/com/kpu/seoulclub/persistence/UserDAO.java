@@ -18,6 +18,8 @@ public interface UserDAO {
 	
 	public UserVO read(int uno) throws Exception;
 	
+	public UserVO read(UserVO vo) throws Exception; //login
+	
 	public void delete(int uno) throws Exception;
 	
 	public List<UserVO> listAll() throws Exception;

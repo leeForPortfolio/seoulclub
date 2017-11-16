@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/createclub_etName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:hint="클럽 이름을 입력해주세요"
+            android:inputType="textPersonName" />
+
+        <Button
+            android:id="@+id/btnClubNameCheck"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="중복확인" />
+
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/createclub_etIntroduce"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="간단소개 (20자 이내)"
+        android:inputType="textPersonName" />
+
+    <EditText
+        android:id="@+id/createclub_etDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="상세 설명"
+        android:inputType="textPersonName" />
+
+    <Spinner
+        android:id="@+id/createclub_regionSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/location"
+        />
+
+    <Spinner
+        android:id="@+id/createclub_concernSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/createclub_btnSelectPicture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="사진 선택" />
+
+        <ImageView
+            android:id="@+id/clubIvImage"
+            android:layout_width="100dp"
+            android:layout_height="100dp" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/createclub_btnComplete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="클럽 생성하기" />
+
+</LinearLayout>

@@ -42,6 +42,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -65,17 +68,18 @@ public class JoinActivity extends AppCompatActivity {
     ArrayAdapter<String> regionAdapter;
     List<Concern> concerns;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join);
+        ButterKnife.bind(this);
+        init();
+    }
 
-
-
-
-        btnComplete = (Button) findViewById(R.id.btn_join_complete);
+    private void init() {
         imageView = (ImageView) findViewById(R.id.join_img);
-        btnIdCheck = (Button) findViewById(R.id.btnIdCheck);
         etId = (EditText) findViewById(R.id.etId);
         etPsw = (EditText) findViewById(R.id.etPsw);
         etNick = (EditText) findViewById(R.id.etNickname);
@@ -94,49 +98,6 @@ public class JoinActivity extends AppCompatActivity {
         regionSpinner = (Spinner) findViewById(R.id.regionSppiner);
         concernSpinner = (Spinner) findViewById(R.id.concernSpinner);
         List<Concern> list = new ArrayList<>();
-
-        btnIdCheck.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                RetrofitManager.getInstance().getUrl().idcheck(new User(etId.getText().toString())).enqueue(new Callback<IdCheckResult>() {
-                    @Override
-                    public void onResponse(Call<IdCheckResult> call, Response<IdCheckResult> response) {
-                        IdCheckResult idCheckResult = response.body();
-
-
-
-                        if (idCheckResult.isResult()) {
-                            Toast.makeText(getApplicationContext(), "사용 가능한 아이디 입니다.", Toast.LENGTH_SHORT).show();
-
-                        } else {
-                            Toast.makeText(getApplicationContext(), "이미 사용중인 아이디입니다.", Toast.LENGTH_SHORT).show();
-
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<IdCheckResult> call, Throwable t) {
-
-                    }
-                });
-            }
-        });
-
-        btnBirth.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new DatePickerDialog(JoinActivity.this, dateSetListener, year, month, day).show();
-
-            }
-        });
-
-
-        findViewById(R.id.btnpictureSelect).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pickImage();
-            }
-        });
 
         final String[] locations = getResources().getStringArray(R.array.location);
         ArrayAdapter<String> regionAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item) {
@@ -216,63 +177,7 @@ public class JoinActivity extends AppCompatActivity {
 
             }
         });
-
-
-        btnComplete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                RequestBody id = RequestBody.create(MultipartBody.FORM, etId.getText().toString());
-                RequestBody pwd = RequestBody.create(MultipartBody.FORM, etPsw.getText().toString());
-                RequestBody nickName = RequestBody.create(MultipartBody.FORM, etNick.getText().toString());
-                RequestBody name = RequestBody.create(MultipartBody.FORM, etName.getText().toString());
-                RequestBody birth = RequestBody.create(MultipartBody.FORM, msg);
-                RequestBody loctaion = RequestBody.create(MultipartBody.FORM, (String)(regionSpinner.getSelectedItem())); //(JoinActivity.this.SelectedLocation+""));
-                RequestBody concern = RequestBody.create(MultipartBody.FORM, (String)(concernSpinner.getSelectedItem())); //+ (JoinActivity.this.SelectedLocation+));
-                RequestBody sex = RequestBody.create(MultipartBody.FORM, (rgSelectSex.getCheckedRadioButtonId() == R.id.radioMan) ? "1" : "2");
-                RequestBody introduce = RequestBody.create(MultipartBody.FORM, etIntroduce.getText().toString());
-
-//                Log.e("list", "id : " + etId.getText().toString() + " location : " + SelectedLocation);
-
-
-                File file2 = new File(imagePath);
-                RequestBody requestFile =
-                        RequestBody.create(
-                                MediaType.parse(getContentResolver().getType(imageUri)), file2
-                        );
-                MultipartBody.Part file = MultipartBody.Part.createFormData("file", file2.getName(), requestFile);
-
-
-                RetrofitManager.getInstance().getUrl().join(id, pwd, name, nickName, birth, loctaion, concern, sex, introduce, file).enqueue(new Callback<Map<String,String>>() {
-                    @Override
-                    public void onResponse(Call<Map<String,String>> call, Response<Map<String,String>> response) {
-
-
-                        if (response.isSuccessful()) {
-                            Toast.makeText(getApplicationContext(), "회원 가입에 성공 했습니다.", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(JoinActivity.this,MainActivity.class);
-                            startActivity(intent);
-                        } else {
-                            Toast.makeText(getApplicationContext(), "회원 가입에 실패 했습니다.", Toast.LENGTH_SHORT).show();
-                            Log.i(""+response.code(),""+response.body());
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<Map<String,String>> call, Throwable t) {
-                        Log.e("failure", "", t);
-                    }
-                });
-
-
-
-
-            }
-        });
-
     }
-
-    ///////////////////////////////////////
 
     private DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
         @Override
@@ -387,5 +292,84 @@ public class JoinActivity extends AppCompatActivity {
             }
         }
     }
+
+
+    @OnClick(R.id.btnIdCheck)
+            void btnIdcheck() {
+        RetrofitManager.getInstance().getUrl().idcheck(new User(etId.getText().toString())).enqueue(new Callback<IdCheckResult>() {
+            @Override
+            public void onResponse(Call<IdCheckResult> call, Response<IdCheckResult> response) {
+                IdCheckResult idCheckResult = response.body();
+
+
+
+                if (idCheckResult.isResult()) {
+                    Toast.makeText(getApplicationContext(), "사용 가능한 아이디 입니다.", Toast.LENGTH_SHORT).show();
+
+                } else {
+                    Toast.makeText(getApplicationContext(), "이미 사용중인 아이디입니다.", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<IdCheckResult> call, Throwable t) {
+
+            }
+        });
+    }
+    @OnClick(R.id.btnBirth)
+            void setBtnBirth() {
+        new DatePickerDialog(JoinActivity.this, dateSetListener, year, month, day).show();
+
+    }
+    @OnClick(R.id.btnpictureSelect)
+            void btnSelectPicture() {
+        pickImage();
+    }
+    @OnClick(R.id.btn_join_complete)
+            public void joinComplete() {
+        RequestBody id = RequestBody.create(MultipartBody.FORM, etId.getText().toString());
+        RequestBody pwd = RequestBody.create(MultipartBody.FORM, etPsw.getText().toString());
+        RequestBody nickName = RequestBody.create(MultipartBody.FORM, etNick.getText().toString());
+        RequestBody name = RequestBody.create(MultipartBody.FORM, etName.getText().toString());
+        RequestBody birth = RequestBody.create(MultipartBody.FORM, msg);
+        RequestBody loctaion = RequestBody.create(MultipartBody.FORM, (String)(regionSpinner.getSelectedItem())); //(JoinActivity.this.SelectedLocation+""));
+        RequestBody concern = RequestBody.create(MultipartBody.FORM, (String)(concernSpinner.getSelectedItem())); //+ (JoinActivity.this.SelectedLocation+));
+        RequestBody sex = RequestBody.create(MultipartBody.FORM, (rgSelectSex.getCheckedRadioButtonId() == R.id.radioMan) ? "1" : "2");
+        RequestBody introduce = RequestBody.create(MultipartBody.FORM, etIntroduce.getText().toString());
+
+        File file2 = new File(imagePath);
+        RequestBody requestFile =
+                RequestBody.create(
+                        MediaType.parse(getContentResolver().getType(imageUri)), file2
+                );
+        MultipartBody.Part file = MultipartBody.Part.createFormData("file", file2.getName(), requestFile);
+
+
+        RetrofitManager.getInstance().getUrl().join(id, pwd, name, nickName, birth, loctaion, concern, sex, introduce, file).enqueue(new Callback<Map<String,String>>() {
+            @Override
+            public void onResponse(Call<Map<String,String>> call, Response<Map<String,String>> response) {
+
+
+                if (response.isSuccessful()) {
+                    Toast.makeText(getApplicationContext(), "회원 가입에 성공 했습니다.", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(JoinActivity.this,MainActivity.class);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(getApplicationContext(), "회원 가입에 실패 했습니다.", Toast.LENGTH_SHORT).show();
+                    Log.i(""+response.code(),""+response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Map<String,String>> call, Throwable t) {
+                Log.e("failure", "", t);
+            }
+        });
+    }
+
+
+
 
 }

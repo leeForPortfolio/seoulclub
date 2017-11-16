@@ -3,14 +3,12 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kpu.seoulclub.mapper.ClubMapper">
-	<insert id="create">
+	<insert id="create" keyProperty="cno" useGeneratedKeys="true"> 
 		INSERT INTO club(
 			name, 
 		    introduce, 
 		    description, 
-		    maxpeople, 
-		    isadmission, 
-		    isprivate, 
+		    maxPeople, 
 		    storedFolder, 
 		    storedFile, 
 		    originalFileName, 
@@ -22,9 +20,7 @@
 		    #{name},
 		    #{introduce},
 		    #{description},
-		    #{maxpeople},
-		    #{isadmission},
-		    #{isprivate},
+		    #{maxPeople},
 		    #{storedFolder},
 		    #{storedFile},
 		    #{originalFileName},
@@ -35,63 +31,81 @@
 		    );
 	</insert>
 	
+	
+	<insert id="createClubMember">
+		INSERT INTO clubmember(
+			cno,
+			uno,
+			name,
+			id,
+			authority)
+		VALUES (
+		    #{cno},
+		    #{uno},
+		    #{name},
+		    #{id},
+		    #{authority}
+		    );
+	</insert> 
+	
+	<delete id="delete">
+		DELETE FROM club WHERE cno = #{cno}
+	</delete> 
+	
+	<delete id="deleteClubMember">
+		DELETE FROM clubmember WHERE cno = #{cno} and uno = #{uno}
+	</delete> 
+	
+	<select id="countClubMember">
+		SELECT count(*) FROM clubmember WHERE cno = #{cno}
+	</select>
+	
 	<select id="nameCount" resultType="int">
 		SELECT COUNT(cno)
 		FROM club
-		WHERE name like #{name}
+		WHERE name = #{name}
 	</select>
+	
+	<!-- <select id="cnoCount" resultType="int">
+		SELECT MAX(cno)
+		FROM club
+	</select> -->
 	
 	<select id="listAll" resultType="ClubVO">
-		SELECT 
-			club.cno, 
-			club.name, 
-		    club.introduce, 
-		    club.currentpeople, 
-		    club.maxpeople, 
-		    club.location, 
-		    club.concern,
-		    club.storedFolder,
-		    club.storedFile,
-		    CONCAT("/photo/", club.storedFolder, "/", club.storedFile) as imgurl
-		FROM club
-		JOIN timeline ON club.cno = timeline.cno
-		ORDER BY timeline.regDate DESC
-		LIMIT 30
+		SELECT 	c.cno, c.name, c.introduce, count(*) as currentPeople, c.maxPeople, c.location, c.concern, c.storedFolder, c.storedFile,
+		    CONCAT("/photo/", c.storedFolder, "/", c.storedFile) as imgurl
+		FROM 	(SELECT club.*, timeline.regDate FROM club JOIN timeline ON club.cno = timeline.cno) c, clubmember cm
+		WHERE 	c.cno = cm.cno
+		ORDER BY c.regDate DESC
 	</select>
 	
+	
+	
+	<select id="myclub" resultType="ClubVO">
+		SELECT 	c.cno, c.name, c.introduce, count(*) as currentPeople, c.maxPeople, c.location, c.concern, c.storedFolder, c.storedFile,
+		    CONCAT("/photo/", c.storedFolder, "/", c.storedFile) as imgurl
+		FROM 	club c, clubmember cm
+		WHERE 	c.cno = cm.cno
+		AND 	c.cno = #{cno}
+	</select>
+	
+	
 	<select id="listByCL" resultType="ClubVO">
-		SELECT
-			cno,
-		    name,
-		    introduce,
-		    currentpeople,
-		    maxpeople,
-		    location,
-		    concern,
-		    storedFolder,
-		    storedFile,
-		    CONCAT("/photo/", club.storedFolder, "/", club.storedFile) as imgurl
-		FROM club
-		WHERE location like CONCAT("%",#{location},"%") OR concern like CONCAT("%",#{concern}, "%")
-		ORDER BY name ASC
-		LIMIT 30;
+		SELECT 	c.cno, c.name, c.introduce, count(*) as currentPeople, c.maxPeople, c.location, c.concern, c.storedFolder, c.storedFile,
+		    CONCAT("/photo/", c.storedFolder, "/", c.storedFile) as imgurl
+		FROM 	club c, clubmember cm
+		WHERE 	c.cno = cm.cno
+		WHERE c.location like CONCAT("%",#{location},"%") OR c.concern like CONCAT("%",#{concern}, "%")
+		ORDER BY c.name ASC
 	</select>
 	
 	<select id="listByUno" resultType="ClubVO">
-		SELECT
-			cno,
-		    name,
-		    introduce,
-		    currentpeople,
-		    maxpeople,
-		    location,
-		    concern,
-		    storedFolder,
-		    storedFile,
-		    CONCAT("/photo/", club.storedFolder, "/", club.storedFile) as imgurl
-		FROM club
-		WHERE uno = #{uno}
-		ORDER BY name ASC;
+		SELECT 	c.cno, c.name, c.introduce, count(*) as currentPeople, c.maxPeople, c.location, c.concern, c.storedFolder, c.storedFile,
+		    CONCAT("/photo/", c.storedFolder, "/", c.storedFile) as imgurl
+		FROM 	club c, clubmember cm
+		WHERE 	c.cno = cm.cno
+		AND 	c.uno = #{uno}
+		ORDER BY c.name ASC
 	</select>
 	
 </mapper>

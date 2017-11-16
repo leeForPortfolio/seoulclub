@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         viewPager = (ViewPager)findViewById(R.id.main_viewpager);
-        PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager());
+        PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager(),1);
         viewPager.setAdapter(pagerAdapter);
 
         buttonsClickListener = new View.OnClickListener() {

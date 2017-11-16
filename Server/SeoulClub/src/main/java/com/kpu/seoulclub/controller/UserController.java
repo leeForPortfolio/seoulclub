@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
+import javax.servlet.http.HttpSession;
 
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -175,6 +176,25 @@ public class UserController {
 		
 		return entity;
 	}
+	//
+	@GetMapping("/clublist")
+	public ResponseEntity<List<UserVO>> clubListAll() {
+		List<UserVO> list = null;
+		ResponseEntity<List<UserVO>> entity = null;
+		
+		
+		try {
+			list = service.listAll();
+			entity = new ResponseEntity<List<UserVO>>(list, HttpStatus.OK);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+		return entity;
+	}
+	//
 	
 	@PutMapping("/{uno}")
 	public ResponseEntity<String> modify(@PathVariable int uno, @RequestBody UserVO vo) {
@@ -218,6 +238,27 @@ public class UserController {
 			// TODO: handle exception
 			e.printStackTrace();
 			entity = new ResponseEntity<String>("fail", HttpStatus.BAD_REQUEST);
+		}
+		
+		return entity;
+	}
+	
+	@PostMapping("/login")
+	public ResponseEntity<JSONObject> login(@RequestBody UserVO vo, HttpSession session) {
+		ResponseEntity<JSONObject> entity = null;
+		JSONObject obj = new JSONObject();
+		
+		try {
+			UserVO loginVO = service.login(vo);
+			session.setAttribute("user", loginVO); 
+			obj.put("result", "success");
+			entity = new ResponseEntity<>(obj, HttpStatus.OK);
+			logger.info(vo.getId() + "님 로그인 완료");
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			obj.put("result", "fail");
+			entity = new ResponseEntity<>(obj, HttpStatus.BAD_REQUEST);
 		}
 		
 		return entity;

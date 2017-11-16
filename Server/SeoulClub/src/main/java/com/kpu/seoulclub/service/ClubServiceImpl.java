@@ -6,8 +6,10 @@ import java.util.Random;
 import javax.inject.Inject;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.kpu.seoulclub.domain.ClubMemberVO;
 import com.kpu.seoulclub.domain.ClubVO;
 import com.kpu.seoulclub.domain.UserVO;
 import com.kpu.seoulclub.persistence.ClubDAO;
@@ -20,7 +22,8 @@ public class ClubServiceImpl implements ClubService {
 	private ClubDAO dao;
 	
 	@Override
-	public boolean regist(ClubVO vo, MultipartFile file) throws Exception {
+	@Transactional
+	public boolean regist(ClubVO vo, ClubMemberVO uservo, MultipartFile file) throws Exception {
 		int nameCount = dao.nameCount(vo.getName());
 		
 		if(nameCount > 0) 
@@ -38,7 +41,7 @@ public class ClubServiceImpl implements ClubService {
 				vo.setFileSize(file.getSize());
 			}
 			
-			dao.create(vo);
+			dao.create(vo,uservo);
 			return true;
 		}
 	}
@@ -70,5 +73,21 @@ public class ClubServiceImpl implements ClubService {
 	@Override
 	public List<ClubVO> myClubs(int uno) throws Exception {
 		return dao.listByUno(uno);
+	}
+
+	@Override
+	public int cnoCount() throws Exception {
+		return dao.cnoCount();
+	}
+	
+	@Override
+	public void joinClub(ClubMemberVO membervo) throws Exception {
+		dao.joinClub(membervo);
+	}
+	
+	@Transactional
+	@Override
+	public void withdrawClub(ClubMemberVO membervo) throws Exception {
+		dao.withdrawClub(membervo);
 	}
 }

@@ -11,7 +11,11 @@ import com.kpu.seoulclub.domain.UserVO;
 public interface UserService {
 	public boolean regist(UserVO vo, MultipartFile file) throws Exception;
 	
+	public UserVO login(UserVO vo) throws Exception;
+	
 	public boolean dupCheck(String id) throws Exception;
+	
+	public int UnoCount(String id) throws Exception;
 	
 	public ResponseEntity<String> modifyPhoto(
 			int uno, String storedFolder,

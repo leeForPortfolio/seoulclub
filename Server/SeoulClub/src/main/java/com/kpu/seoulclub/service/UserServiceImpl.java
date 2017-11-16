@@ -51,6 +51,16 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 	
+	@Override
+	public UserVO login(UserVO vo) throws Exception {
+		int idCount = userDao.idCount(vo.getId());
+		
+		if(idCount == 0) 
+			throw new Exception();
+		
+		return userDao.read(vo);
+	}
+	
 	public boolean dupCheck(String id) throws Exception {
 		System.out.println(id);
 		if(userDao.idCount(id) > 0)
@@ -114,5 +124,11 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List<ConcernVO> listConcern() throws Exception {
 		return userDao.listConcern();
+	}
+
+	@Override
+	public int UnoCount(String id) throws Exception {
+		// TODO Auto-generated method stub
+		return userDao.idCount(id);
 	}
 }

@@ -28,7 +28,34 @@ public class UserVO {
 	private String location;
 	private String concern;
 	private String imgurl;
+	private String joinclub;
+	private int joinclubnumber;
+	private String picturePath;
 	
+	public String getPicturePath() {
+		return picturePath;
+	}
+
+	public void setPicturePath(String picturePath) {
+		this.picturePath = picturePath;
+	}
+
+	public String getJoinclub() {
+		return joinclub;
+	}
+
+	public void setJoinclub(String joinclub) {
+		this.joinclub = joinclub;
+	}
+
+	public int getJoinclubnumber() {
+		return joinclubnumber;
+	}
+
+	public void setJoinclubnumber(int joinclubnumber) {
+		this.joinclubnumber = joinclubnumber;
+	}
+
 	public UserVO() {}
 	
 	public UserVO(String id, String pwd, String name, String nickName, int sex, String introduce, String birth,

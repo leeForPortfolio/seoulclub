@@ -15,19 +15,25 @@
         <activity
             android:name=".view.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity android:name=".view.ClubMainAcitivity"/>
+
+        <activity android:name=".view.LoginActivity">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
 
         <activity android:name=".view.WriteIntroduceActivity" />
 
         <activity android:name=".view.JoinActivity">
+
         </activity>
+        <activity android:name=".view.CreateClub"/>
+
 
 
     </application>

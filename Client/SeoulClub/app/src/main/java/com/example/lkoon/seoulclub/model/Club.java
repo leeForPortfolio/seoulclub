@@ -11,11 +11,13 @@ public class Club {
     private String description;
     private int currentPeople;
     private int maxPeople;
-    private int isadmission;
-    private int isprivate;
     private String location;
     private String concern;
     private String imgurl;
+
+    public Club(String name) {
+        this.name = name;
+    }
 
     public int getCno() {
         return cno;
@@ -65,21 +67,7 @@ public class Club {
         this.maxPeople = maxPeople;
     }
 
-    public int getIsadmission() {
-        return isadmission;
-    }
 
-    public void setIsadmission(int isadmission) {
-        this.isadmission = isadmission;
-    }
-
-    public int getIsprivate() {
-        return isprivate;
-    }
-
-    public void setIsprivate(int isprivate) {
-        this.isprivate = isprivate;
-    }
 
     public String getLocation() {
         return location;

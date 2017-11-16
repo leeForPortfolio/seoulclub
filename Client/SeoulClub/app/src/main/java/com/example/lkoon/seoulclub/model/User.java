@@ -16,9 +16,15 @@ public class User {
     String pwd ="";
     String introduce;
 
+    public User(String id, String pwd) {
+        this.id = id;
+        this.pwd = pwd;
+    }
+
     public User(String id) {
         this.id = id;
     }
+
 
     public User(String id, String pwd, String nickname, int lno, String sex, String introduce) {
         this.nickname = nickname;

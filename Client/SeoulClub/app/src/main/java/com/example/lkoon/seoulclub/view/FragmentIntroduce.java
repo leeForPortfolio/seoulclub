@@ -46,8 +46,6 @@ public class FragmentIntroduce extends Fragment {
         try {
             view = inflater.inflate(R.layout.fragment1_main, container, false);
 
-
-
             writeIntroduce = (FloatingActionButton) view.findViewById(R.id.btnWrite);
             writeIntroduce.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -61,6 +59,7 @@ public class FragmentIntroduce extends Fragment {
             linearLayoutManager = new LinearLayoutManager(container.getContext(),LinearLayoutManager.VERTICAL,false);
             recyclerView.setLayoutManager(linearLayoutManager);
             introduceAdapter = new IntroduceAdapter(clubInroduce = new ArrayList<>());
+
             introduceAdapter.setOnCustomItemClickListener(new OnCustomItemClickListener() {
                 @Override
                 public void onItemClick(int position) {
@@ -68,12 +67,6 @@ public class FragmentIntroduce extends Fragment {
                 }
             });
             recyclerView.setAdapter(introduceAdapter);
-
-
-
-
-
-
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -85,15 +78,14 @@ public class FragmentIntroduce extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+
         RetrofitManager.getInstance().getUrl().clubIntroduce().enqueue(new Callback<List<Club>>() {
             @Override
             public void onResponse(Call<List<Club>> call, Response<List<Club>> response) {
-
                 clubInroduce.clear();
                 clubInroduce.addAll(response.body());
                 //Log.e("test!",response.body().get(0).getName());
                 introduceAdapter.notifyDataSetChanged();
-
             }
             @Override
             public void onFailure(Call<List<Club>> call, Throwable t) {

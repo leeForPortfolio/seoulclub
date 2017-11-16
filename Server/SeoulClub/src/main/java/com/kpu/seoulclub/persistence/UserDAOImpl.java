@@ -8,6 +8,7 @@ import javax.inject.Inject;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.ConcurrentReferenceHashMap;
 
 import com.kpu.seoulclub.domain.ConcernVO;
 import com.kpu.seoulclub.domain.UserVO;
@@ -24,6 +25,15 @@ public class UserDAOImpl implements UserDAO {
 	public void create(UserVO vo) throws Exception {
 		// TODO Auto-generated method stub
 		session.insert(namespace + ".create", vo);
+		
+		Map<String,Object> map = new HashMap<>();
+		map.put("uno", vo.getUno());
+		String split[] = vo.getLocation().split(",");
+		for(int i=0;i<split.length;i++) {
+			split[i] = split[i].trim();
+		}
+		map.put("locations", split);
+		session.insert(namespace+".addLocation", map);
 	}
 	
 	@Override
@@ -63,6 +73,13 @@ public class UserDAOImpl implements UserDAO {
 	public UserVO read(int uno) throws Exception {
 		// TODO Auto-generated method stub
 		return session.selectOne(namespace + ".read", uno);
+	}
+	
+	@Override
+	public UserVO read(UserVO vo) throws Exception {
+		UserVO userVO = session.selectOne(namespace + ".read", vo);
+		userVO.setPicturePath("/photo/"+userVO.getStoredFolder()+'/'+userVO.getStoredFile());
+		return userVO;
 	}
 
 	@Override

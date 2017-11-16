@@ -1,6 +1,7 @@
 package com.example.lkoon.seoulclub;
 
 import com.example.lkoon.seoulclub.model.Club;
+import com.example.lkoon.seoulclub.model.ClubMember;
 import com.example.lkoon.seoulclub.model.Concern;
 import com.example.lkoon.seoulclub.model.Concerns;
 import com.example.lkoon.seoulclub.model.IdCheckResult;
@@ -63,7 +64,7 @@ public class RetrofitManager {
     }
 
     public interface RetrofitUrl{
-        String BASE_URL = "http://192.168.43.209:8080";
+        String BASE_URL = "http:/192.168.121.202:8080";
 
 
         @GET("local/all")
@@ -89,7 +90,21 @@ public class RetrofitManager {
                                       @Part("location")RequestBody location,@Part("concern")RequestBody concern, @Part("sex")RequestBody sex, @Part("introduce")RequestBody introduce,
                                       @Part MultipartBody.Part file);
 
+        @POST("/club/regist")
+        @Multipart
+        Call<Map<String,String>> clubRegist(@Part("name") RequestBody name, @Part("introduce")RequestBody introduce,@Part("description")RequestBody description, @Part("location")RequestBody location,@Part("concern")RequestBody concern,
+                                            @Part MultipartBody.Part file);
 
+        @POST("/club/namecheck")
+        Call<IdCheckResult> clubCheck(@Body Club club);
 
+        @POST("/club/ml")
+        Call<List<ClubMember>> memberList(@Body int cno);
+
+        @POST("/user/login")
+        Call<User> login(@Body User user);
+
+        @GET("/club/list/my")
+        Call<List<Club>> myClub();
     }
 }
